@@ -72,4 +72,71 @@ UPDATE zadanie
 SET projekt = 1
 WHERE id_zadania = 3;
 
+CREATE TABLE sprint (id_sprintu INT AUTO_INCREMENT PRIMARY KEY, 
+	numer_sprintu INT UNSIGNED,
+    data_rozpoczecia DATE,
+    data_zakonczenia DATE
+);
+ALTER TABLE zadanie
+ADD sprint INT;
+
+ALTER TABLE zadanie
+ADD CONSTRAINT fk_zadanie_sprint
+FOREIGN KEY (sprint)
+REFERENCES sprint(id_sprintu)
+ON DELETE SET NULL;
+
+INSERT INTO sprint
+(numer_sprintu, data_rozpoczecia, data_zakonczenia)
+VALUES
+(1, '2026-03-01', '2026-03-14');
+
+
+UPDATE zadanie
+SET sprint = 1
+WHERE id_zadania IN (1, 2);
+
+CREATE TABLE status (
+	id_statusu INT AUTO_INCREMENT PRIMARY KEY, 
+    nazwa_statusu VARCHAR(20)
+);
+
+INSERT INTO status (nazwa_statusu)
+VALUES
+('Nowe'),
+('W trakcie'),
+('Zakonczenie');
+
+CREATE TABLE zadanie_has_status (
+	id_zdarzenia INT AUTO_INCREMENT PRIMARY KEY,
+    id_zadania INT,
+    id_statusu INT,
+    data_zdarzenia DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_zadania)
+    REFERENCES zadanie(id_zadania)
+    ON DELETE CASCADE,
+    
+    FOREIGN KEY (id_statusu)
+    REFERENCES status(id_statusu)
+);
+    
+INSERT INTO zadanie_has_status
+(id_zadania, id_statusu)
+VALUES
+(1, 1),
+(2, 2),
+(3, 3);
+
+DELETE FROM projekt
+WHERE id_projektu = 2;
+
+SELECT * FROM zadanie;
+
+ALTER TABLE zadanie
+DROP FOREIGN KEY fk_zadanie_sprint;
+
+DROP TABLE sprint;
+
+
+
 
